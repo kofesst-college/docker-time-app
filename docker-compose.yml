@@ -1,0 +1,53 @@
+version: '3.1'
+services:
+  api:
+    container_name: api
+    restart: always
+    build: ./api
+    ports:
+      - 5555:5000
+    networks:
+      - timeapp-brige-network
+    volumes:
+      - ./api:/app
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app
+    networks:
+      - timeapp-brige-network
+  
+  adminer-timeapp:
+    container_name: adminer-timeapp
+    image: adminer
+    restart: always
+    ports:
+      - 8888:8080
+    networks:
+      - timeapp-brige-network
+  
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: time_db
+      MYSQL_USER: pav5
+      MYSQL_PASSWORD: admin
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - 6603:3306
+    networks:
+      - timeapp-brige-network    
+
+networks:
+  timeapp-brige-network:
+    driver: bridge
+
+  
